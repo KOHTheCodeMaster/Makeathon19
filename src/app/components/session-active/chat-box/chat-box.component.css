@@ -1,0 +1,24 @@
+/* Add any component-specific styles here if Tailwind isn't enough */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* You might want to style the scrollbar for a better look */
+/* For Webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Or a very dark gray like #2d3748 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a5568; /* gray-600 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #718096; /* gray-500 */
+}
+

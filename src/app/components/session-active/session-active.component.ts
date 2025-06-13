@@ -4,11 +4,12 @@ import {Router} from '@angular/router';
 import {SessionService} from '../../service/session-service';
 import {LeftSidePanelComponent} from './left-side-panel/left-side-panel.component';
 import {Subscription} from 'rxjs';
+import {ChatBoxComponent} from './chat-box/chat-box.component';
 
 @Component({
   selector: 'app-session-active',
   standalone: true,
-  imports: [CommonModule, LeftSidePanelComponent],
+  imports: [CommonModule, LeftSidePanelComponent, ChatBoxComponent],
   templateUrl: './session-active.component.html'
 })
 export class SessionActiveComponent implements OnInit, OnDestroy {
