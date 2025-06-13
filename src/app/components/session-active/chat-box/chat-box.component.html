@@ -39,76 +39,61 @@
   <!-- Hidden Audio Player -->
   <audio #audioPlayer class="hidden"></audio>
 
-  <!-- Recording Popup -->
-  <div *ngIf="showRecordingPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div class="bg-gray-700 p-6 rounded-lg shadow-xl w-full max-w-sm text-center">
-      <h3 class="text-lg font-semibold mb-4">Record Voice Note</h3>
-      <div *ngIf="micPermissionError" class="p-3 mb-3 bg-red-700 rounded-md text-sm">
-        {{ micPermissionError }}
-      </div>
-      <!-- Audio Graph Placeholder -->
-      <div class="my-4 h-20 bg-gray-600 rounded flex items-center justify-center">
-        <p *ngIf="!isRecording && !recordedAudioUrl" class="text-gray-400">Click record to start</p>
-        <div *ngIf="isRecording" class="flex items-center space-x-1">
-          <span class="text-red-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-pulse" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12z" clip-rule="evenodd" /></svg>
-          </span>
-          <span class="text-gray-300">Recording...</span>
-          <!-- Simple animated bars for recording indication -->
-          <div class="w-10 h-5 flex items-end space-x-0.5">
-            <span class="w-1 h-2/5 bg-blue-400 opacity-70 rounded-full animate-pulse delay-75"></span>
-            <span class="w-1 h-3/5 bg-blue-400 opacity-90 rounded-full animate-pulse delay-150"></span>
-            <span class="w-1 h-4/5 bg-blue-400 opacity-100 rounded-full animate-pulse delay-300"></span>
-            <span class="w-1 h-3/5 bg-blue-400 opacity-90 rounded-full animate-pulse delay-150"></span>
-            <span class="w-1 h-2/5 bg-blue-400 opacity-70 rounded-full animate-pulse delay-75"></span>
-          </div>
-        </div>
-        <div *ngIf="!isRecording && recordedAudioUrl" class="flex flex-col items-center">
-            <p class="text-gray-300 mb-2">Recording complete. Send or cancel.</p>
-            <audio [src]="recordedAudioUrl" controls class="w-full h-10"></audio>
-        </div>
-      </div>
-      <div class="flex justify-around mt-6">
-        <button (click)="cancelRecording()" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
-          Cancel
-        </button>
-        <button *ngIf="!isRecording && !recordedAudioUrl" (click)="startRecordingInPopup()" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
-          Record
-        </button>
-        <button *ngIf="isRecording" (click)="stopRecordingAndPrepareToSend()" class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
-          Stop
-        </button>
-        <button *ngIf="!isRecording && recordedAudioUrl" (click)="sendRecordedAudio()" [disabled]="!recordedAudioUrl" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors disabled:opacity-50">
-          Send
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Input Area -->
   <div class="p-4 border-t border-gray-700">
-    <div *ngIf="micPermissionError && !showRecordingPopup" class="p-2 mb-2 bg-red-700 rounded-md text-xs text-center">
+    <!-- Microphone Permission Error -->
+    <div *ngIf="micPermissionError" class="p-2 mb-2 bg-red-700 rounded-md text-xs text-center">
       {{ micPermissionError }}
     </div>
-    <div class="flex items-center space-x-2">
+
+    <!-- Standard Text Input and Initial Record Button -->
+    <div *ngIf="!isRecording" class="flex items-center space-x-2">
       <input type="text"
              [(ngModel)]="newMessage"
              (keyup.enter)="sendMessage()"
              placeholder="Type your message..."
              class="flex-grow p-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 text-white text-sm">
 
-      <button (click)="toggleVoiceRecordingPopup()" class="p-2.5 text-gray-400 hover:text-white bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
+      <button (click)="handleVoiceButtonClick()" [disabled]="!!micPermissionError" class="p-2.5 text-gray-400 hover:text-white bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-1v-2.07z" clip-rule="evenodd" />
         </svg>
       </button>
 
       <button (click)="sendMessage()" [disabled]="!newMessage.trim()" class="p-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor" transform="rotate(90)">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor" style="transform: rotate(90deg);">
           <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 16.571V11a1 1 0 112 0v5.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
         </svg>
       </button>
     </div>
+
+    <!-- Active Recording UI -->
+    <div *ngIf="isRecording" class="flex flex-col items-center p-3 bg-gray-700 rounded-lg">
+      <div class="flex items-center w-full">
+        <button (click)="cancelCurrentRecording()" class="mr-3 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-3 rounded-lg transition-colors text-xs">
+          Cancel
+        </button>
+        <span class="text-red-500 mr-2">
+          <!-- Recording Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-ping" viewBox="0 0 20 20" fill="currentColor">
+            <circle cx="10" cy="10" r="7" />
+          </svg>
+        </span>
+        <span class="text-gray-300 font-mono text-sm mr-3">{{ formatTime(recordingTime) }}</span>
+        <!-- Animated sound bars -->
+        <div class="flex-grow h-8 flex items-center justify-center space-x-1 overflow-hidden mr-3">
+          <span class="w-1 h-2/5 bg-blue-400 opacity-70 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.1s]"></span>
+          <span class="w-1 h-3/5 bg-blue-400 opacity-90 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.2s]"></span>
+          <span class="w-1 h-4/5 bg-blue-400 opacity-100 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.3s]"></span>
+          <span class="w-1 h-full bg-blue-400 opacity-100 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.4s]"></span>
+          <span class="w-1 h-4/5 bg-blue-400 opacity-100 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.3s]"></span>
+          <span class="w-1 h-3/5 bg-blue-400 opacity-90 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.2s]"></span>
+          <span class="w-1 h-2/5 bg-blue-400 opacity-70 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.1s]"></span>
+        </div>
+        <button (click)="stopAndSendRecording()" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm">
+          Send
+        </button>
+      </div>
+    </div>
   </div>
 </div>
-
