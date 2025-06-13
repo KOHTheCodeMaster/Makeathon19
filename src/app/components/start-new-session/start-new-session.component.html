@@ -48,24 +48,50 @@
         <p class="text-sm text-white">{{ errorMessage }}</p>
       </div>
 
+      <!-- Microphone Permission Section -->
+      <div class="mb-6 text-center">
+        <div *ngIf="micPermissionStatus === 'prompt' && !micErrorMessage" class="p-3 bg-yellow-600 rounded-md">
+          <p class="text-sm text-white">Microphone access is needed for the session.</p>
+          <button (click)="requestMicPermission()" class="mt-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-2 px-4 rounded-lg shadow-md transition-colors text-xs">
+            Enable Microphone
+          </button>
+        </div>
+        <div *ngIf="micErrorMessage" class="p-3 bg-red-700 rounded-md">
+          <p class="text-sm text-white">{{ micErrorMessage }}</p>
+          <button *ngIf="micPermissionStatus === 'denied' || micPermissionStatus === 'unavailable' && navigator.mediaDevices"
+                  (click)="requestMicPermission()"
+                  class="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded-lg shadow-md transition-colors text-xs">
+            Retry/Request Microphone Access
+          </button>
+        </div>
+        <div *ngIf="micPermissionStatus === 'granted' && !micErrorMessage" class="p-3 bg-green-700 rounded-md">
+          <p class="text-sm text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-1v-2.07z" clip-rule="evenodd" />
+            </svg>
+            Microphone access granted.
+          </p>
+        </div>
+      </div>
+
       <!-- Start Session Button -->
       <div class="relative group w-full">
         <button
           (click)="startSession()"
-          [disabled]="!selectedFile || !!errorMessage"
+          [disabled]="!selectedFile || !!errorMessage || micPermissionStatus !== 'granted'"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Start Session
         </button>
         <div
-          *ngIf="!selectedFile || !!errorMessage"
+          *ngIf="!selectedFile || !!errorMessage || micPermissionStatus !== 'granted'"
           class="absolute bottom-full mb-2 hidden group-hover:block w-auto p-2 text-xs text-white bg-gray-700 rounded-md shadow-lg whitespace-nowrap -translate-x-1/2 left-1/2"
         >
           <span *ngIf="!selectedFile">Please upload a file first.</span>
           <span *ngIf="selectedFile && errorMessage">Please upload a valid PDF/Excel file.</span>
+          <span *ngIf="micPermissionStatus !== 'granted' && selectedFile && !errorMessage">Microphone access is required.</span>
         </div>
       </div>
     </div>
   </main>
 </div>
-

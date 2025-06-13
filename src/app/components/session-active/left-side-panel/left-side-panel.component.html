@@ -1,1 +1,42 @@
-<div class="text-3xl">Left Side Panel Here.</div>
+<div class="flex flex-col h-full">
+  <!-- Header with Logo and Title -->
+  <header class="mb-6">
+    <div class="flex items-center justify-between py-2">
+      <a routerLink="/" class="flex items-center space-x-2 cursor-pointer">
+        <svg class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v3a3 3 0 01-3 3z" />
+        </svg>
+        <span class="text-2xl font-bold">Voice Reports</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Report Preview and Info -->
+  <div class="flex-grow mb-6">
+    <!-- Report Preview Icon/Image -->
+    <div class="mb-4 text-center">
+      <svg class="mx-auto h-16 w-16 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    </div>
+
+    <!-- Report Title -->
+    <h3 class="text-lg font-semibold mb-2 text-center truncate" title="{{ reportTitle }}">{{ reportTitle }}</h3>
+
+    <!-- Summary Section -->
+    <div class="bg-gray-700 p-3 rounded-md text-sm">
+      <h4 class="font-semibold mb-1 text-gray-300">Summary:</h4>
+      <p class="text-gray-400 text-xs leading-relaxed">{{ summary || 'No summary available.' }}</p>
+    </div>
+  </div>
+
+  <!-- End Session Button -->
+  <div class="mt-auto">
+    <button
+      (click)="endSession()"
+      class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-colors"
+    >
+      End Session
+    </button>
+  </div>
+</div>
