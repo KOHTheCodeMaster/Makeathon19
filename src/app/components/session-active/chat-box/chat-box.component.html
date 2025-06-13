@@ -1,37 +1,52 @@
-<div class="flex flex-col h-full bg-gray-800 rounded-lg shadow-xl">
+<div class="flex flex-col h-full bg-[#0B141A] text-[#E9EDEF] rounded-lg shadow-xl">
   <!-- Chat Messages Area -->
-  <div #chatMessagesContainer class="flex-grow p-4 space-y-4 overflow-y-auto scroll-smooth">
+  <div #chatMessagesContainer class="flex-grow p-4 space-y-3 overflow-y-auto scroll-smooth bg-cover bg-center"
+       style="background-image: url('/assets/images/whatsapp-bg-dark.png');">
     <div *ngFor="let msg of messages" class="flex"
          [ngClass]="{'justify-end': msg.sender === 'user', 'justify-start': msg.sender === 'ai'}">
-      <div class="max-w-xs lg:max-w-md px-4 py-2 rounded-xl shadow"
-           [ngClass]="{'bg-blue-600 text-white': msg.sender === 'user', 'bg-gray-700 text-gray-200': msg.sender === 'ai'}">
-
-        <!-- Text Message -->
+      <!-- User Message Bubble -->
+      <div *ngIf="msg.sender === 'user'" class="max-w-xs lg:max-w-md px-3 py-2 rounded-lg shadow-md bg-[#005C4B] text-gray-100">
         <p *ngIf="msg.type === 'text'" class="text-sm break-words">{{ msg.text }}</p>
-
-        <!-- Audio Message -->
         <div *ngIf="msg.type === 'audio' && msg.audioUrl" class="flex items-center space-x-2">
-          <button (click)="playAudio(msg)" class="p-1.5 rounded-full hover:bg-opacity-20 hover:bg-white transition-colors">
-            <svg *ngIf="!msg.isPlaying" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <button (click)="playAudio(msg)" class="p-1.5 rounded-full hover:bg-black/20 transition-colors">
+            <svg *ngIf="!msg.isPlaying" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-200" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
             </svg>
-            <svg *ngIf="msg.isPlaying" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <svg *ngIf="msg.isPlaying" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-200" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clip-rule="evenodd" />
             </svg>
           </button>
-          <span class="text-xs">Audio Message</span>
-          <!-- Simple audio wave placeholder -->
-          <div class="w-20 h-5 flex items-center space-x-0.5">
-            <span class="w-1 h-2/5 bg-current opacity-70 rounded-full"></span>
-            <span class="w-1 h-3/5 bg-current opacity-90 rounded-full"></span>
-            <span class="w-1 h-4/5 bg-current opacity-100 rounded-full"></span>
-            <span class="w-1 h-3/5 bg-current opacity-90 rounded-full"></span>
-            <span class="w-1 h-2/5 bg-current opacity-70 rounded-full"></span>
+          <div class="w-24 h-5 flex items-center space-x-0.5">
+            <span class="w-1 h-1/3 bg-gray-300 opacity-70 rounded-full"></span>
+            <span class="w-1 h-2/3 bg-gray-300 opacity-90 rounded-full"></span>
+            <span class="w-1 h-full bg-gray-300 opacity-100 rounded-full"></span>
+            <span class="w-1 h-2/3 bg-gray-300 opacity-90 rounded-full"></span>
+            <span class="w-1 h-1/3 bg-gray-300 opacity-70 rounded-full"></span>
           </div>
         </div>
-        <p class="text-xs mt-1 opacity-70" [ngClass]="{'text-right': msg.sender === 'user', 'text-left': msg.sender === 'ai'}">
-          {{ msg.timestamp | date:'shortTime' }}
-        </p>
+        <p class="text-xs mt-1 opacity-80 text-right">{{ msg.timestamp | date:'shortTime' }}</p>
+      </div>
+      <!-- AI Message Bubble -->
+      <div *ngIf="msg.sender === 'ai'" class="max-w-xs lg:max-w-md px-3 py-2 rounded-lg shadow-md bg-[#202C33] text-gray-200">
+        <p *ngIf="msg.type === 'text'" class="text-sm break-words">{{ msg.text }}</p>
+        <div *ngIf="msg.type === 'audio' && msg.audioUrl" class="flex items-center space-x-2">
+          <button (click)="playAudio(msg)" class="p-1.5 rounded-full hover:bg-black/20 transition-colors">
+            <svg *ngIf="!msg.isPlaying" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+            </svg>
+            <svg *ngIf="msg.isPlaying" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div class="w-24 h-5 flex items-center space-x-0.5">
+            <span class="w-1 h-1/3 bg-gray-500 opacity-70 rounded-full"></span>
+            <span class="w-1 h-2/3 bg-gray-500 opacity-90 rounded-full"></span>
+            <span class="w-1 h-full bg-gray-500 opacity-100 rounded-full"></span>
+            <span class="w-1 h-2/3 bg-gray-500 opacity-90 rounded-full"></span>
+            <span class="w-1 h-1/3 bg-gray-500 opacity-70 rounded-full"></span>
+          </div>
+        </div>
+        <p class="text-xs mt-1 opacity-60 text-left">{{ msg.timestamp | date:'shortTime' }}</p>
       </div>
     </div>
   </div>
@@ -40,27 +55,25 @@
   <audio #audioPlayer class="hidden"></audio>
 
   <!-- Input Area -->
-  <div class="p-4 border-t border-gray-700">
+  <div class="p-3 bg-[#111B21] border-t border-[#2A3942] flex items-center space-x-3">
     <!-- Microphone Permission Error -->
-    <div *ngIf="micPermissionError" class="p-2 mb-2 bg-red-700 rounded-md text-xs text-center">
+    <div *ngIf="micPermissionError" class="absolute bottom-16 left-0 right-0 p-2 mb-2 bg-red-700/90 rounded-md text-xs text-center text-white shadow-lg">
       {{ micPermissionError }}
     </div>
 
     <!-- Standard Text Input and Initial Record Button -->
-    <div *ngIf="!isRecording" class="flex items-center space-x-2">
+    <div *ngIf="!isRecording" class="flex items-center space-x-3 w-full">
       <input type="text"
              [(ngModel)]="newMessage"
              (keyup.enter)="sendMessage()"
-             placeholder="Type your message..."
-             class="flex-grow p-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 text-white text-sm">
-
-      <button (click)="handleVoiceButtonClick()" [disabled]="!!micPermissionError" class="p-2.5 text-gray-400 hover:text-white bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50">
+             placeholder="Type a message"
+             class="flex-grow p-2.5 bg-[#2A3942] border border-[#374A55] rounded-lg focus:ring-1 focus:ring-[#00A884] focus:border-[#00A884] placeholder-gray-500 text-[#E9EDEF] text-sm">
+      <button (click)="handleVoiceButtonClick()" [disabled]="!!micPermissionError" class="p-2.5 text-[#8696A0] hover:text-[#AEBAC1] bg-transparent hover:bg-[#2A3942] rounded-full transition-colors disabled:opacity-50">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-1v-2.07z" clip-rule="evenodd" />
         </svg>
       </button>
-
-      <button (click)="sendMessage()" [disabled]="!newMessage.trim()" class="p-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50">
+      <button (click)="sendMessage()" [disabled]="!newMessage.trim()" class="p-2.5 text-[#8696A0] hover:text-[#AEBAC1] bg-transparent hover:bg-[#2A3942] rounded-full transition-colors disabled:opacity-50">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor" style="transform: rotate(90deg);">
           <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 16.571V11a1 1 0 112 0v5.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
         </svg>
@@ -68,32 +81,32 @@
     </div>
 
     <!-- Active Recording UI -->
-    <div *ngIf="isRecording" class="flex flex-col items-center p-3 bg-gray-700 rounded-lg">
-      <div class="flex items-center w-full">
-        <button (click)="cancelCurrentRecording()" class="mr-3 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-3 rounded-lg transition-colors text-xs">
-          Cancel
-        </button>
-        <span class="text-red-500 mr-2">
-          <!-- Recording Icon -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-ping" viewBox="0 0 20 20" fill="currentColor">
-            <circle cx="10" cy="10" r="7" />
-          </svg>
-        </span>
-        <span class="text-gray-300 font-mono text-sm mr-3">{{ formatTime(recordingTime) }}</span>
-        <!-- Animated sound bars -->
-        <div class="flex-grow h-8 flex items-center justify-center space-x-1 overflow-hidden mr-3">
-          <span class="w-1 h-2/5 bg-blue-400 opacity-70 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.1s]"></span>
-          <span class="w-1 h-3/5 bg-blue-400 opacity-90 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.2s]"></span>
-          <span class="w-1 h-4/5 bg-blue-400 opacity-100 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.3s]"></span>
-          <span class="w-1 h-full bg-blue-400 opacity-100 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.4s]"></span>
-          <span class="w-1 h-4/5 bg-blue-400 opacity-100 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.3s]"></span>
-          <span class="w-1 h-3/5 bg-blue-400 opacity-90 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.2s]"></span>
-          <span class="w-1 h-2/5 bg-blue-400 opacity-70 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_alternate_0.1s]"></span>
-        </div>
-        <button (click)="stopAndSendRecording()" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm">
-          Send
-        </button>
+    <div *ngIf="isRecording" class="flex items-center w-full p-2 bg-[#202C33] rounded-lg">
+      <button (click)="cancelCurrentRecording()" class="p-2 text-red-500 hover:text-red-400 rounded-full hover:bg-black/20 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <span class="text-red-500 mx-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-pulse" viewBox="0 0 20 20" fill="currentColor">
+          <circle cx="10" cy="10" r="7" />
+        </svg>
+      </span>
+      <span class="text-gray-400 font-mono text-sm mr-3">{{ formatTime(recordingTime) }}</span>
+      <div class="flex-grow h-8 flex items-center justify-center space-x-1 overflow-hidden mr-2">
+        <span class="w-1 h-2/5 bg-[#00A884] opacity-70 rounded-full animate-[pulse_0.6s_ease-in-out_infinite_alternate_0.1s]"></span>
+        <span class="w-1 h-3/5 bg-[#00A884] opacity-90 rounded-full animate-[pulse_0.6s_ease-in-out_infinite_alternate_0.2s]"></span>
+        <span class="w-1 h-4/5 bg-[#00A884] opacity-100 rounded-full animate-[pulse_0.6s_ease-in-out_infinite_alternate_0.3s]"></span>
+        <span class="w-1 h-full bg-[#00A884] opacity-100 rounded-full animate-[pulse_0.6s_ease-in-out_infinite_alternate_0.4s]"></span>
+        <span class="w-1 h-4/5 bg-[#00A884] opacity-100 rounded-full animate-[pulse_0.6s_ease-in-out_infinite_alternate_0.3s]"></span>
+        <span class="w-1 h-3/5 bg-[#00A884] opacity-90 rounded-full animate-[pulse_0.6s_ease-in-out_infinite_alternate_0.2s]"></span>
+        <span class="w-1 h-2/5 bg-[#00A884] opacity-70 rounded-full animate-[pulse_0.6s_ease-in-out_infinite_alternate_0.1s]"></span>
       </div>
+      <button (click)="stopAndSendRecording()" class="p-2.5 bg-[#00A884] hover:bg-[#008769] text-white rounded-full transition-colors shadow-md">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 16.571V11a1 1 0 112 0v5.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+        </svg>
+      </button>
     </div>
   </div>
 </div>

@@ -1,12 +1,13 @@
-<div class="flex h-screen bg-gray-900 text-white">
+<div class="flex h-screen bg-[#0B141A] text-[#E9EDEF]">
   <!-- Left Sidebar -->
-  <aside class="w-1/4 bg-gray-800 p-4 flex flex-col">
+  <aside class="w-1/4 bg-[#111B21] p-4 flex flex-col border-r border-[#2A3942]">
     <app-left-side-panel></app-left-side-panel>
   </aside>
 
   <!-- Main Content Area -->
-  <main class="w-3/4 p-4 flex flex-col h-full">
+  <main class="w-3/4 flex flex-col h-full bg-[#0B141A]">
     <!-- ChatBox Component will take the available space -->
+    <!-- Added p-0 to main and specific padding/bg to chat-box if needed, or let chat-box handle its own bg -->
     <app-chat-box class="flex-grow h-full"></app-chat-box>
   </main>
 </div>
